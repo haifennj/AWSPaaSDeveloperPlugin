@@ -1,0 +1,80 @@
+<idea-plugin>
+    <id>com-actionsoft-aws-idea-plugin</id>
+    <name>AWS PaaS Developer Plugin</name>
+    <version>2.3.5</version>
+    <vendor email="haifennj@gmail.com">haifennj</vendor>
+
+    <description><![CDATA[
+        <b>AWSPaaSDeveloperPlugin</b><br/>
+        Author：<br/>
+        Haifennj,Willard<br/>
+    ]]></description>
+
+    <change-notes><![CDATA[
+    ]]>
+    </change-notes>
+
+    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
+    <idea-version since-build="174"/>
+
+    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+         on how to target different products -->
+    <!-- uncomment to enable plugin in all products
+    <depends>com.intellij.modules.lang</depends>
+    -->
+
+    <!--    <depends>com.intellij.modules.java</depends>-->
+    <depends>com.intellij.java</depends>
+    <extensions defaultExtensionNs="com.intellij">
+    </extensions>
+    <extensions defaultExtensionNs="com.intellij">
+        <!-- displayType只有这四种类型, id 在一个插件内不能重复,isLogByDefault表示是否在 Event Log 中记录 -->
+        <notificationGroup displayType="BALLOON" id="com.github.haifennj.ideaplugin.notification.balloon"
+                           isLogByDefault="false"/>
+        <!-- 主配置入口 -->
+        <applicationConfigurable displayName="AWS PaaS 开发配置" parentId="tools"
+                                 instance="com.github.haifennj.ideaplugin.config.ConfigSetting"
+                                 id="com.github.haifennj.ideaplugin.setting.id"/>
+        <!-- AWS应用自启动服务配置 -->
+        <projectConfigurable displayName="AWS应用自启动控制" parentId="com.github.haifennj.ideaplugin.setting.id"
+                             id="AWSCustomManifestPlugin.Config"
+                             instance="com.github.haifennj.ideaplugin.manifest.ui.SuspendAppConfigurable"/>
+    </extensions>
+
+    <actions>
+        <action id="AWSLibraryMgrPlugin.Menu"
+                class="com.github.haifennj.ideaplugin.library.AWSLibraryRefreshAction"
+                text="AWS Libraries 更新" description="AWS Libraries 更新">
+            <add-to-group group-id="ToolsMenu" anchor="last"/>
+        </action>
+        <action id="AWSArtifactPlugin.Menu"
+                class="com.github.haifennj.ideaplugin.artifact.AWSArtifactRefreshAction"
+                text="AWS Artifacts 更新" description="AWS Artifacts 更新">
+            <add-to-group group-id="ToolsMenu" anchor="last"/>
+        </action>
+        <action id="AWSDependenciesPlugin.Menu"
+                class="com.github.haifennj.ideaplugin.dependencies.AWSModuleDependenciesAction"
+                text="AWS Dependencies 更新" description="AWS Dependencies 更新">
+            <add-to-group group-id="ToolsMenu" anchor="last"/>
+        </action>
+        <action id="AWSLibAndDependPlugin.Menu"
+                class="com.github.haifennj.ideaplugin.tools.AWSLibraryAndDependRefreshAction"
+                text="AWS 库和依赖更新" description="AWS 库和依赖更新">
+            <add-to-group group-id="ToolsMenu" anchor="last"/>
+        </action>
+        <action id="CreateModuleByAWSApp" class="com.github.haifennj.ideaplugin.module.CreateModulesAction" text="Create AWS App Module">
+            <add-to-group group-id="ProjectViewPopupMenuModifyGroup" anchor="before" relative-to-action="$Delete"/>
+        </action>
+        <action id="LinkApp" class="com.github.haifennj.ideaplugin.link.LinkAppAction" text="Link App">
+            <add-to-group group-id="ProjectViewPopupMenuModifyGroup" anchor="before" relative-to-action="$Delete"/>
+        </action>
+        <action id="CreateModuleAndLinkApps" class="com.github.haifennj.ideaplugin.module.CreateModuleAndLinkAppAction" text="Create Module And Link">
+            <add-to-group group-id="ProjectViewPopupMenuModifyGroup" anchor="before" relative-to-action="$Delete"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt C"/>
+        </action>
+        <action id="CopyToDesktop" class="com.github.haifennj.ideaplugin.file.FileCopyAction" text="Copy to Desktop" description="Copy to Desktop">
+            <add-to-group group-id="ProjectViewPopupMenu" anchor="after" relative-to-action="CutCopyPasteGroup"/>
+        </action>
+    </actions>
+
+</idea-plugin>
