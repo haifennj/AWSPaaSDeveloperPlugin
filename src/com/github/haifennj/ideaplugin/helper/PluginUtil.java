@@ -12,15 +12,14 @@ import com.intellij.openapi.roots.libraries.LibraryTablesRegistrar;
 import com.intellij.openapi.vfs.JarFileSystem;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.psi.search.FilenameIndex;
+import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.Processor;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.FilenameFilter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by Haiifenng on 2017.01.16.
@@ -35,19 +34,36 @@ public class PluginUtil {
 	public static Module getReleaseModule(Project project, boolean isMsg) {
 		Module releaseModule = ModuleManager.getInstance(project).findModuleByName("release");
 		if (releaseModule == null) {
+			releaseModule = ModuleManager.getInstance(project).findModuleByName("aws.release");
+		}
+		if (releaseModule == null) {
 			if (isMsg) {
 				NotificationUtil.showErrorNotification(project, "当前Project中没有命名为[release]的Module");
 			}
 			return null;
 		}
-		if (releaseModule.getModuleFile() == null) {
+		if (!"aws.release".equals(releaseModule.getName()) && releaseModule.getModuleFile() == null) {
 			if (isMsg) {
 				NotificationUtil.showErrorNotification(project, "当前Project中的[release]的不是一个有效的AWS资源");
 			}
 			return null;
 		}
+		VirtualFile file = null;
+		if (releaseModule.getModuleFile()!=null) {
+			file = releaseModule.getModuleFile().getParent();
+		} else {
+			Collection<VirtualFile> virtualFilesByName = FilenameIndex.getVirtualFilesByName(project, "release", GlobalSearchScope.allScope(project));
+			for (VirtualFile virtualFile : virtualFilesByName) {
+				if (virtualFile.isDirectory()) {
+					boolean releaseDir = isReleaseDir(virtualFile);
+					if (releaseDir) {
+						return releaseModule;
+					}
+				}
+			}
+		}
 		//校验是不是一个有效的release
-		boolean releaseDir = isReleaseDir(releaseModule.getModuleFile().getParent());
+		boolean releaseDir = isReleaseDir(file);
 		if (releaseDir) {
 			return releaseModule;
 		} else {
@@ -221,15 +237,38 @@ public class PluginUtil {
 		return true;
 	}
 
+	public static boolean isAWS7(Project project) {
+		Collection<VirtualFile> virtualFilesByName = FilenameIndex.getVirtualFilesByName(project, "release", GlobalSearchScope.allScope(project));
+		for (VirtualFile virtualFile : virtualFilesByName) {
+			if (virtualFile.isDirectory()) {
+				boolean releaseDir = isReleaseDir(virtualFile);
+
+				String releasePath = virtualFile.getPath();
+				File file_release7_1 = new File(releasePath + "/bin/conf/application-dev.yml");
+				File file_release7_2 = new File(releasePath + "/bin/conf/bootstrap.yml");
+				if (file_release7_1.exists() && file_release7_2.exists()) {//AWS7版本
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
 	public static boolean isReleaseDir(VirtualFile file) {
 		//校验是不是一个有效的release
 		String releasePath = file.getPath();
+		File file_release7_1 = new File(releasePath + "/bin/conf/application-dev.yml");
+		File file_release7_2 = new File(releasePath + "/bin/conf/bootstrap.yml");
+
 		File file_release6_1 = new File(releasePath + "/bin/conf/server.xml");
 		File file_release6_2 = new File(releasePath + "/bin/lib/aws-license.jar");
 
 		File file_release5_1 = new File(releasePath + "/bin/system.xml");
 		File file_release5_2 = new File(releasePath + "/bin/lib/aws.platform.jar");
-		if (file_release6_1.exists() && file_release6_2.exists()) {//AWS6版本
+
+		if (file_release7_1.exists() && file_release7_2.exists()) {//AWS7版本
+			return true;
+		} else if (file_release6_1.exists() && file_release6_2.exists()) {//AWS6版本
 			return true;
 		} else if (file_release5_1.exists() && file_release5_2.exists()) {//AWS5版本
 			return true;

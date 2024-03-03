@@ -79,6 +79,10 @@ public class CreateModuleAndLinkAppAction extends LinkAppAction {
 	private void checkFile(AnActionEvent e, String flag, Module appsModule, VirtualFile file) {
 		String fileName = file.getName();
 		String filePath = file.getPath();
+		if (PluginUtil.isAWS7(e.getProject())) {
+			e.getPresentation().setVisible(false);
+			return;
+		}
 		if (file.getName().startsWith("_bpm")) {
 			e.getPresentation().setVisible(false);
 			return;

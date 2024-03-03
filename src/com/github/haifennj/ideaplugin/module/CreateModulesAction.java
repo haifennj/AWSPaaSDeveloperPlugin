@@ -39,6 +39,10 @@ public class CreateModulesAction extends AnAction {
 	public void update(AnActionEvent e) {
 		VirtualFile[] data = CommonDataKeys.VIRTUAL_FILE_ARRAY.getData(e.getDataContext());
 		VirtualFile file = CommonDataKeys.VIRTUAL_FILE.getData(e.getDataContext());
+		if (PluginUtil.isAWS7(e.getProject())) {
+			e.getPresentation().setVisible(false);
+			return;
+		}
 		if (file == null) {
 			e.getPresentation().setVisible(false);
 		} else {

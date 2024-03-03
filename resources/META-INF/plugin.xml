@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>com-actionsoft-aws-idea-plugin</id>
     <name>AWS PaaS Developer Plugin</name>
-    <version>2.3.5</version>
+    <version>2.4.2</version>
     <vendor email="haifennj@gmail.com">haifennj</vendor>
 
     <description><![CDATA[
@@ -63,6 +63,9 @@
             <add-to-group group-id="ToolsMenu" anchor="last"/>
         </action>
         <action id="CreateModuleByAWSApp" class="com.github.haifennj.ideaplugin.module.CreateModulesAction" text="Create AWS App Module">
+            <add-to-group group-id="ProjectViewPopupMenuModifyGroup" anchor="before" relative-to-action="$Delete"/>
+        </action>
+        <action id="GenerateGradle" class="com.github.haifennj.ideaplugin.gradle.GenerateGradle" text="Write to 'local.gradle'">
             <add-to-group group-id="ProjectViewPopupMenuModifyGroup" anchor="before" relative-to-action="$Delete"/>
         </action>
         <action id="LinkApp" class="com.github.haifennj.ideaplugin.link.LinkAppAction" text="Link App">
