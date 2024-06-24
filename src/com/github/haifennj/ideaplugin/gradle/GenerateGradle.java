@@ -16,17 +16,17 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.Collection;
+import java.util.Objects;
 
 public class GenerateGradle extends AnAction {
     @Override
     public void actionPerformed(@NotNull AnActionEvent e) {
         // 获取当前项目和选中的文件
         Project project = e.getProject();
-        String projectPath = project.getBasePath();
         VirtualFile[] data = CommonDataKeys.VIRTUAL_FILE_ARRAY.getData(e.getDataContext());
         VirtualFile localGradleFile = getLocalGradleFile(project);
 
-        if (data.length > 0) {
+        if (data != null && data.length > 0) {
             if (localGradleFile != null) {
                 boolean isExist = false;
                 // 生成代码并写入local.gradle
@@ -37,18 +37,17 @@ public class GenerateGradle extends AnAction {
                 }
 
                 // 将代码写入local.gradle文件
-                VirtualFile finalLocalGradleFile = localGradleFile;
                 boolean finalIsExist = isExist;
                 WriteCommandAction.runWriteCommandAction(project, () -> {
                     try {
-                        Document document = FileDocumentManager.getInstance().getDocument(finalLocalGradleFile);
-                        if (finalIsExist) {
-                            deleteLinesWithText(document, codeBuilder.toString());
-                        } else {
-                            document.insertString(
-                                    document.getTextLength(),
-                                    codeBuilder.toString()
-                            );
+                        Document document = FileDocumentManager.getInstance().getDocument(localGradleFile);
+                        if (document != null) {
+                            if (finalIsExist) {
+                                deleteLinesWithText(document, codeBuilder.toString());
+                            } else {
+                                document.insertString(document.getTextLength(), codeBuilder.toString()
+                                );
+                            }
                         }
                     } catch (Exception ex) {
                         ex.printStackTrace();
@@ -79,8 +78,11 @@ public class GenerateGradle extends AnAction {
     }
 
     private String getCode(Project project, VirtualFile file) {
+        if (project == null) {
+            return "";
+        }
         String path = file.getPath();
-        String projectPath = project.getBasePath();
+        String projectPath = project.getBasePath() == null ? "" : project.getBasePath();
         if (path.contains("/apps/")) {
             path = "../.." + path.replace(projectPath,"");
         }
@@ -88,7 +90,7 @@ public class GenerateGradle extends AnAction {
         StringBuilder codeBuilder = new StringBuilder();
         codeBuilder.append("// ").append(fileName).append("\n");
         codeBuilder.append("include('").append(fileName).append("')\n");
-        codeBuilder.append("project(':" + fileName + "').projectDir = new File(settingsDir,'" + path + "')\n");
+        codeBuilder.append("project(':").append(fileName).append("').projectDir = new File(settingsDir,'").append(path).append("')\n");
         return codeBuilder.toString();
     }
 
@@ -100,7 +102,7 @@ public class GenerateGradle extends AnAction {
         if (file == null) {
             e.getPresentation().setVisible(false);
         } else {
-            if (data.length > 1) {
+            if ((data != null ? data.length : 0) > 1) {
                 e.getPresentation().setVisible(false);
             } else {
                 checkFile(e, file, false);
@@ -110,10 +112,6 @@ public class GenerateGradle extends AnAction {
 
     private void checkFile(AnActionEvent e, VirtualFile file, boolean isMulti) {
         String flag = "/apps/";
-        if (PluginUtil.getReleaseModule(e.getProject()) == null) {
-            e.getPresentation().setVisible(false);
-            return;
-        }
         if (!file.isDirectory()) {
             e.getPresentation().setVisible(false);
             return;
@@ -159,12 +157,12 @@ public class GenerateGradle extends AnAction {
 
     protected boolean checkFileExist(AnActionEvent e, VirtualFile file) {
         VirtualFile localGradleFile = getLocalGradleFile(e.getProject());
-        String fileCode = getCode(e.getProject(), file);
-        String text = FileDocumentManager.getInstance().getDocument(localGradleFile).getText();
-        if (text.contains(fileCode)) {
-            return true;
+        if (localGradleFile == null) {
+            return false;
         }
-        return false;
+        String fileCode = getCode(e.getProject(), file);
+        String text = Objects.requireNonNull(FileDocumentManager.getInstance().getDocument(localGradleFile)).getText();
+        return text.contains(fileCode);
     }
 
 }

@@ -40,12 +40,14 @@ public class PluginUtil {
 			if (isMsg) {
 				NotificationUtil.showErrorNotification(project, "当前Project中没有命名为[release]的Module");
 			}
+			System.err.println("当前Project中没有命名为[release]的Module");
 			return null;
 		}
 		if (!"aws.release".equals(releaseModule.getName()) && releaseModule.getModuleFile() == null) {
 			if (isMsg) {
 				NotificationUtil.showErrorNotification(project, "当前Project中的[release]的不是一个有效的AWS资源");
 			}
+			System.err.println("当前Project中的[release]的不是一个有效的AWS资源");
 			return null;
 		}
 		VirtualFile file = null;
@@ -70,6 +72,7 @@ public class PluginUtil {
 			if (isMsg) {
 				NotificationUtil.showErrorNotification(project, "当前Project中的[release]的不是一个有效的AWS资源");
 			}
+			System.err.println("当前Project中的[release]的不是一个有效的AWS资源");
 			return null;
 		}
 	}
