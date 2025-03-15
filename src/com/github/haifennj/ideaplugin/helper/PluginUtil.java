@@ -1,11 +1,25 @@
 package com.github.haifennj.ideaplugin.helper;
 
+import java.io.File;
+import java.io.FilenameFilter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
+
+import org.jetbrains.annotations.Nullable;
+
 import com.github.haifennj.ideaplugin.library.FileSuffixFilter;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.*;
+import com.intellij.openapi.roots.ModifiableRootModel;
+import com.intellij.openapi.roots.ModuleRootManager;
+import com.intellij.openapi.roots.OrderEntry;
+import com.intellij.openapi.roots.OrderEnumerator;
+import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryTable;
 import com.intellij.openapi.roots.libraries.LibraryTablesRegistrar;
@@ -15,11 +29,6 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.search.FilenameIndex;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.util.Processor;
-import org.jetbrains.annotations.Nullable;
-
-import java.io.File;
-import java.io.FilenameFilter;
-import java.util.*;
 
 /**
  * Created by Haiifenng on 2017.01.16.
@@ -50,23 +59,9 @@ public class PluginUtil {
 			System.err.println("当前Project中的[release]的不是一个有效的AWS资源");
 			return null;
 		}
-		VirtualFile file = null;
-		if (releaseModule.getModuleFile()!=null) {
-			file = releaseModule.getModuleFile().getParent();
-		} else {
-			Collection<VirtualFile> virtualFilesByName = FilenameIndex.getVirtualFilesByName(project, "release", GlobalSearchScope.allScope(project));
-			for (VirtualFile virtualFile : virtualFilesByName) {
-				if (virtualFile.isDirectory()) {
-					boolean releaseDir = isReleaseDir(virtualFile);
-					if (releaseDir) {
-						return releaseModule;
-					}
-				}
-			}
-		}
+		VirtualFile file = findReleaseModuleFile(project);
 		//校验是不是一个有效的release
-		boolean releaseDir = isReleaseDir(file);
-		if (releaseDir) {
+		if (file != null) {
 			return releaseModule;
 		} else {
 			if (isMsg) {
@@ -75,6 +70,34 @@ public class PluginUtil {
 			System.err.println("当前Project中的[release]的不是一个有效的AWS资源");
 			return null;
 		}
+	}
+
+	public static VirtualFile findReleaseModuleFile(Project project) {
+		Module releaseModule = ModuleManager.getInstance(project).findModuleByName("release");
+		if (releaseModule == null) {
+			releaseModule = ModuleManager.getInstance(project).findModuleByName("aws.release");
+		}
+		if (releaseModule == null) {
+			return null;
+		}
+		VirtualFile file = null;
+		if (releaseModule.getModuleFile()!=null) {
+			file = releaseModule.getModuleFile().getParent();
+			if (isReleaseDir(file)) {
+				return file;
+			}
+		} else {
+			Collection<VirtualFile> virtualFilesByName = FilenameIndex.getVirtualFilesByName(project, "release", GlobalSearchScope.allScope(project));
+			for (VirtualFile virtualFile : virtualFilesByName) {
+				if (virtualFile.isDirectory()) {
+					boolean releaseDir = isReleaseDir(virtualFile);
+					if (releaseDir) {
+						return virtualFile;
+					}
+				}
+			}
+		}
+		return null;
 	}
 
 	public static List<File> findAllFileInPath(String rootPath, FilenameFilter filenameFilter) {

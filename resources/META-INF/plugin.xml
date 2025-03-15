@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>com-actionsoft-aws-idea-plugin</id>
     <name>AWS PaaS Developer Plugin</name>
-    <version>2.4.3</version>
+    <version>2.4.4</version>
     <vendor email="haifennj@gmail.com">haifennj</vendor>
 
     <description><![CDATA[
@@ -77,6 +77,36 @@
         </action>
         <action id="CopyToDesktop" class="com.github.haifennj.ideaplugin.file.FileCopyAction" text="Copy to Desktop" description="Copy to Desktop">
             <add-to-group group-id="ProjectViewPopupMenu" anchor="after" relative-to-action="CutCopyPasteGroup"/>
+        </action>
+        <action id="AWSFileExport01-process-pc"
+                class="com.github.haifennj.ideaplugin.file.FileExportAction"
+                text="一键导出(流程运行PC)">
+            <add-to-group group-id="ToolsMenu" anchor="last"/>
+        </action>
+        <action id="AWSFileExport02-process-mobile"
+                class="com.github.haifennj.ideaplugin.file.FileExportAction"
+                text="一键导出(流程运行Mobile)">
+            <add-to-group group-id="ToolsMenu" anchor="last"/>
+        </action>
+        <action id="AWSFileExport03-form-design"
+                class="com.github.haifennj.ideaplugin.file.FileExportAction"
+                text="一键导出(表单设计器)">
+            <add-to-group group-id="ToolsMenu" anchor="last"/>
+        </action>
+        <action id="AWSFileExport04-dw-design"
+                class="com.github.haifennj.ideaplugin.file.FileExportAction"
+                text="一键导出(DW设计器)">
+            <add-to-group group-id="ToolsMenu" anchor="last"/>
+        </action>
+        <action id="AWSFileExport05-dw-pc"
+                class="com.github.haifennj.ideaplugin.file.FileExportAction"
+                text="一键导出(DW-PC)">
+            <add-to-group group-id="ToolsMenu" anchor="last"/>
+        </action>
+        <action id="AWSFileExport06-dw-mobile"
+                class="com.github.haifennj.ideaplugin.file.FileExportAction"
+                text="一键导出(DW-Mobile)">
+            <add-to-group group-id="ToolsMenu" anchor="last"/>
         </action>
     </actions>
 
