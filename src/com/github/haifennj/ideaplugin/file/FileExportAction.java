@@ -47,7 +47,10 @@ public class FileExportAction extends AnAction {
 	}
 	@Override
 	public void actionPerformed(AnActionEvent event) {
-		Module releaseModule = PluginUtil.getReleaseModule(event.getProject());
+		Module releaseModule = PluginUtil.getReleaseModule(event.getProject(), true);
+		if (releaseModule == null) {
+			return;
+		}
 		String moduleName = releaseModule.getName();
 		if (moduleName.equals("aws.release")) {
 			moduleName = "release";
