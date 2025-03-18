@@ -30,11 +30,13 @@ public class FileExportAction extends AnAction {
 		));
 		FILE_PATHS_MAP.put("AWSFileExport03-form-design", List.of(
 				"apps/install/_bpm.platform/template/page/console.m.form.designer.plus.htm",
-				"webserver/webapps/portal/apps/_bpm.platform/form/designer/main"
+				"webserver/webapps/portal/apps/_bpm.platform/form/designer/main",
+				"webserver/webapps/portal/apps/_platform.infra/model/form/designer/main"
 		));
 		FILE_PATHS_MAP.put("AWSFileExport04-dw-design", List.of(
 				"apps/install/_bpm.platform/template/page/console.m.dw.design.plus.htm",
-				"webserver/webapps/portal/apps/_bpm.platform/dw/designer-plus/main"
+				"webserver/webapps/portal/apps/_bpm.platform/dw/designer-plus/main",
+				"webserver/webapps/portal/apps/_platform.infra/model/dw/designer-plus/main"
 		));
 		FILE_PATHS_MAP.put("AWSFileExport05-dw-pc", List.of(
 				"apps/install/_bpm.portal/template/page/client.data.window.portal.htm",
@@ -68,7 +70,6 @@ public class FileExportAction extends AnAction {
 		String fileSeparator = System.getProperty("file.separator");
 		VirtualFile releaseModuleFile = PluginUtil.findReleaseModuleFile(event.getProject());
 		if (releaseModuleFile == null) {
-			NotificationUtil.showErrorNotification(event.getProject(), "未找到release模块");
 			return;
 		}
 		String baseSourceDir = releaseModuleFile.getPath() + fileSeparator;
@@ -77,11 +78,11 @@ public class FileExportAction extends AnAction {
 		for (String path : filePaths) {
 			try {
 				exportFiles(baseSourceDir, defaultOutput + fileSeparator + moduleName + fileSeparator,  checkFilePath(isAWS7, path));
-			} catch (IOException e) {
-				throw new RuntimeException(e);
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		}
-		NotificationUtil.showInfoNotification(event.getProject(), "导出成功 🚀");
+		NotificationUtil.info("导出成功 🚀");
 	}
 
 	public void exportFiles(String baseSourceDir, String targetDir, String relativeFilePath) throws IOException {

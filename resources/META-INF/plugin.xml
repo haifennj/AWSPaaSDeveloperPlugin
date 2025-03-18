@@ -1,6 +1,6 @@
 <idea-plugin>
     <id>com-actionsoft-aws-idea-plugin</id>
-    <name>AWS PaaS Developer Plugin</name>
+    <name>AWS PaaS Developer Plugins</name>
     <version>2.4.4</version>
     <vendor email="haifennj@gmail.com">haifennj</vendor>
 
@@ -15,7 +15,7 @@
     </change-notes>
 
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
-    <idea-version since-build="174"/>
+    <idea-version since-build="191"/>
 
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
          on how to target different products -->
