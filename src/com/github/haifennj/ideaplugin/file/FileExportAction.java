@@ -79,7 +79,7 @@ public class FileExportAction extends AnAction {
 			try {
 				exportFiles(baseSourceDir, defaultOutput + fileSeparator + moduleName + fileSeparator,  checkFilePath(isAWS7, path));
 			} catch (Exception e) {
-				e.printStackTrace();
+				// 不处理异常
 			}
 		}
 		NotificationUtil.info("导出成功 🚀");
