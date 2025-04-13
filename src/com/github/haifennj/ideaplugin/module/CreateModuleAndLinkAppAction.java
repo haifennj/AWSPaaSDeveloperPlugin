@@ -57,29 +57,29 @@ public class CreateModuleAndLinkAppAction extends LinkAppAction {
 		Module appsModule = ModuleManager.getInstance(e.getProject()).findModuleByName("apps");
 		VirtualFile[] data = CommonDataKeys.VIRTUAL_FILE_ARRAY.getData(e.getDataContext());
 		VirtualFile file = CommonDataKeys.VIRTUAL_FILE.getData(e.getDataContext());
-		if (file == null) {
-			e.getPresentation().setVisible(false);
-		} else {
-			if (!file.isDirectory()) {
+			if (file == null) {
 				e.getPresentation().setVisible(false);
-				return;
-			}
-			if (data.length > 1) {
-				e.getPresentation().setText("Create Modules And Link");
-				for (VirtualFile virtualFile : data) {
-					checkFile(e, flag, appsModule, virtualFile);
-				}
-				return;
 			} else {
-				checkFile(e, flag, appsModule, file);
+				if (!file.isDirectory()) {
+					e.getPresentation().setVisible(false);
+					return;
+				}
+				if (data.length > 1) {
+					e.getPresentation().setText("Create Modules And Link");
+					for (VirtualFile virtualFile : data) {
+						checkFile(e, flag, appsModule, virtualFile);
+					}
+					return;
+				} else {
+					checkFile(e, flag, appsModule, file);
+				}
 			}
-		}
 	}
 
 	private void checkFile(AnActionEvent e, String flag, Module appsModule, VirtualFile file) {
 		String fileName = file.getName();
 		String filePath = file.getPath();
-		if (PluginUtil.isAWS7(e.getProject())) {
+		if (PluginUtil.isAWS7()) {
 			e.getPresentation().setVisible(false);
 			return;
 		}

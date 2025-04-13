@@ -61,7 +61,7 @@ public class FileExportAction extends AnAction {
 		String actionId = event.getActionManager().getId(this);
 		List<String> filePaths = FILE_PATHS_MAP.get(actionId);
 
-		boolean isAWS7 = PluginUtil.isAWS7(event.getProject());
+		boolean isAWS7 = PluginUtil.isAWS7();
 
 		SimpleDateFormat datetimeFormat = new SimpleDateFormat("yyyyMMdd_HH");
 		String time = datetimeFormat.format(System.currentTimeMillis());

@@ -1,9 +1,16 @@
 package com.github.haifennj.ideaplugin.gradle;
 
+import java.io.File;
+import java.util.Collection;
+import java.util.Objects;
+
+import org.jetbrains.annotations.NotNull;
+
 import com.github.haifennj.ideaplugin.helper.PluginUtil;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
@@ -12,11 +19,6 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.search.FilenameIndex;
 import com.intellij.psi.search.GlobalSearchScope;
-import org.jetbrains.annotations.NotNull;
-
-import java.io.File;
-import java.util.Collection;
-import java.util.Objects;
 
 public class GenerateGradle extends AnAction {
     @Override
@@ -99,15 +101,17 @@ public class GenerateGradle extends AnAction {
     public void update(AnActionEvent e) {
         VirtualFile[] data = CommonDataKeys.VIRTUAL_FILE_ARRAY.getData(e.getDataContext());
         VirtualFile file = CommonDataKeys.VIRTUAL_FILE.getData(e.getDataContext());
-        if (file == null) {
-            e.getPresentation().setVisible(false);
-        } else {
-            if ((data != null ? data.length : 0) > 1) {
-                e.getPresentation().setVisible(false);
-            } else {
-                checkFile(e, file, false);
-            }
-        }
+		ApplicationManager.getApplication().invokeLater(() -> {
+			if (file == null) {
+				e.getPresentation().setVisible(false);
+			} else {
+				if ((data != null ? data.length : 0) > 1) {
+					e.getPresentation().setVisible(false);
+				} else {
+					checkFile(e, file, false);
+				}
+			}
+		});
     }
 
     private void checkFile(AnActionEvent e, VirtualFile file, boolean isMulti) {

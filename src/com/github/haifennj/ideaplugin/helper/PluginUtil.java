@@ -35,6 +35,8 @@ import com.intellij.util.Processor;
  */
 public class PluginUtil {
 
+	private static volatile boolean isAWS7 = false;
+
 	public static Module getReleaseModule(Project project) {
 		return getReleaseModule(project, false);
 	}
@@ -263,21 +265,24 @@ public class PluginUtil {
 		return true;
 	}
 
-	public static boolean isAWS7(Project project) {
-		Collection<VirtualFile> virtualFilesByName = FilenameIndex.getVirtualFilesByName(project, "release", GlobalSearchScope.allScope(project));
-		for (VirtualFile virtualFile : virtualFilesByName) {
-			if (virtualFile.isDirectory()) {
-				boolean releaseDir = isReleaseDir(virtualFile);
+	public static boolean isAWS7() {
+		return isAWS7;
+	}
 
-				String releasePath = virtualFile.getPath();
-				File file_release7_1 = new File(releasePath + "/bin/conf/application-dev.yml");
-				File file_release7_2 = new File(releasePath + "/bin/conf/bootstrap.yml");
-				if (file_release7_1.exists() && file_release7_2.exists()) {//AWS7版本
-					return true;
+	public static void checkAws7(Project project) {
+		ApplicationManager.getApplication().executeOnPooledThread(() -> {
+			Collection<VirtualFile> virtualFilesByName = FilenameIndex.getVirtualFilesByName(project, "release", GlobalSearchScope.allScope(project));
+			for (VirtualFile virtualFile : virtualFilesByName) {
+				if (virtualFile.isDirectory()) {
+					String releasePath = virtualFile.getPath();
+					File file_release7_1 = new File(releasePath + "/bin/conf/application-dev.yml");
+					File file_release7_2 = new File(releasePath + "/bin/conf/bootstrap.yml");
+					if (file_release7_1.exists() && file_release7_2.exists()) {//AWS7版本
+						isAWS7 = true;
+					}
 				}
 			}
-		}
-		return false;
+		});
 	}
 
 	public static boolean isReleaseDir(VirtualFile file) {

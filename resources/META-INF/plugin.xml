@@ -23,11 +23,10 @@
     <depends>com.intellij.modules.lang</depends>
     -->
 
-    <!--    <depends>com.intellij.modules.java</depends>-->
+    <depends>com.intellij.modules.java</depends>
     <depends>com.intellij.java</depends>
     <extensions defaultExtensionNs="com.intellij">
-    </extensions>
-    <extensions defaultExtensionNs="com.intellij">
+        <postStartupActivity implementation="com.github.haifennj.ideaplugin.helper.MyStartupActivity"/>
         <!-- displayType只有这四种类型, id 在一个插件内不能重复,isLogByDefault表示是否在 Event Log 中记录 -->
         <notificationGroup displayType="BALLOON" id="com.github.haifennj.ideaplugin.notification.balloon"
                            isLogByDefault="false"/>

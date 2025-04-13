@@ -1,9 +1,9 @@
 package com.github.haifennj.ideaplugin.file;
 
-import com.github.haifennj.ideaplugin.helper.OSUtil;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.vfs.VirtualFile;
 
 public class FileCopyAction extends AnAction {
@@ -18,15 +18,14 @@ public class FileCopyAction extends AnAction {
 
 	@Override
 	public void update(AnActionEvent e) {
-		VirtualFile file = CommonDataKeys.VIRTUAL_FILE.getData(e.getDataContext());
-		if (file == null) {
-			e.getPresentation().setVisible(false);
-		} else {
-			if (file.isDirectory()) {
-				e.getPresentation().setVisible(false);
-				return;
+		if (e.getProject() == null) return;
+		VirtualFile file = e.getData(CommonDataKeys.VIRTUAL_FILE);
+
+		ApplicationManager.getApplication().invokeLater(() -> {
+			if (file != null) {
+				boolean isValid = file.isValid();
+				e.getPresentation().setEnabled(isValid);
 			}
-			e.getPresentation().setEnabledAndVisible(OSUtil.isMacOSX());
-		}
+		});
 	}
 }

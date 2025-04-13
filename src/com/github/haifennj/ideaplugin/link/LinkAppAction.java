@@ -1,5 +1,12 @@
 package com.github.haifennj.ideaplugin.link;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import com.github.haifennj.ideaplugin.helper.NotificationUtil;
 import com.github.haifennj.ideaplugin.helper.OSUtil;
 import com.github.haifennj.ideaplugin.helper.PluginUtil;
@@ -11,13 +18,6 @@ import com.intellij.openapi.module.Module;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Haiifenng on 2017.05.19.
@@ -121,7 +121,7 @@ public class LinkAppAction extends AnAction {
 
 	private void checkFile(AnActionEvent e, VirtualFile file, boolean isMulti) {
 		String flag = "/apps/";
-		if (PluginUtil.isAWS7(e.getProject())) {
+		if (PluginUtil.isAWS7()) {
 			e.getPresentation().setVisible(false);
 			return;
 		}
