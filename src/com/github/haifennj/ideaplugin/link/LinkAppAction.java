@@ -121,10 +121,10 @@ public class LinkAppAction extends AnAction {
 
 	private void checkFile(AnActionEvent e, VirtualFile file, boolean isMulti) {
 		String flag = "/apps/";
-		if (PluginUtil.isAWS7()) {
-			e.getPresentation().setVisible(false);
-			return;
-		}
+		// if (PluginUtil.isAWS7()) {
+		// 	e.getPresentation().setVisible(false);
+		// 	return;
+		// }
 		if (PluginUtil.getReleaseModule(e.getProject()) == null) {
 			e.getPresentation().setVisible(false);
 			return;

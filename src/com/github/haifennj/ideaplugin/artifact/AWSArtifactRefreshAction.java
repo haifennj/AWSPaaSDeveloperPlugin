@@ -1,5 +1,7 @@
 package com.github.haifennj.ideaplugin.artifact;
 
+import org.jetbrains.annotations.NotNull;
+
 import com.github.haifennj.ideaplugin.helper.NotificationUtil;
 import com.github.haifennj.ideaplugin.helper.PluginUtil;
 import com.intellij.openapi.actionSystem.AnAction;
@@ -26,5 +28,10 @@ public class AWSArtifactRefreshAction extends AnAction {
 			message = String.format("创建了以下新的Artifacts：\n%s", msg.toString());
 		}
 		NotificationUtil.showInfoNotification(anActionEvent, message);
+	}
+
+	@Override
+	public void update(@NotNull AnActionEvent e) {
+		e.getPresentation().setVisible(!PluginUtil.isAWS7());
 	}
 }

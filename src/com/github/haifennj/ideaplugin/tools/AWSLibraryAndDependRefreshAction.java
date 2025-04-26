@@ -15,7 +15,10 @@
  */
 package com.github.haifennj.ideaplugin.tools;
 
+import org.jetbrains.annotations.NotNull;
+
 import com.github.haifennj.ideaplugin.dependencies.AWSModuleDependenciesAction;
+import com.github.haifennj.ideaplugin.helper.PluginUtil;
 import com.github.haifennj.ideaplugin.library.AWSLibraryRefreshAction;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
@@ -35,5 +38,10 @@ public class AWSLibraryAndDependRefreshAction extends AnAction {
 
 		AWSModuleDependenciesAction depend = new AWSModuleDependenciesAction();
 		depend.actionPerformed(anActionEvent);
+	}
+
+	@Override
+	public void update(@NotNull AnActionEvent e) {
+		e.getPresentation().setVisible(!PluginUtil.isAWS7());
 	}
 }

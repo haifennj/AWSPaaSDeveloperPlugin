@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.Future;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -23,6 +24,7 @@ import com.intellij.openapi.roots.OrderRootType;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryTable;
 import com.intellij.openapi.roots.libraries.LibraryTablesRegistrar;
+import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.vfs.JarFileSystem;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -269,20 +271,29 @@ public class PluginUtil {
 		return isAWS7;
 	}
 
-	public static void checkAws7(Project project) {
-		ApplicationManager.getApplication().executeOnPooledThread(() -> {
-			Collection<VirtualFile> virtualFilesByName = FilenameIndex.getVirtualFilesByName(project, "release", GlobalSearchScope.allScope(project));
-			for (VirtualFile virtualFile : virtualFilesByName) {
-				if (virtualFile.isDirectory()) {
-					String releasePath = virtualFile.getPath();
-					File file_release7_1 = new File(releasePath + "/bin/conf/application-dev.yml");
-					File file_release7_2 = new File(releasePath + "/bin/conf/bootstrap.yml");
-					if (file_release7_1.exists() && file_release7_2.exists()) {//AWS7版本
-						isAWS7 = true;
-					}
+	public static Future<Boolean> checkAws7(Project project) {
+		return ApplicationManager.getApplication().executeOnPooledThread(() ->
+				ApplicationManager.getApplication().runReadAction((Computable<Boolean>) () -> {
+					boolean result = realCheckAws7(project);
+					isAWS7 = result; // 更新静态变量
+					return result;
+				})
+		);
+	}
+
+	private static boolean realCheckAws7(Project project) {
+		Collection<VirtualFile> virtualFilesByName = FilenameIndex.getVirtualFilesByName(project, "release", GlobalSearchScope.allScope(project));
+		for (VirtualFile virtualFile : virtualFilesByName) {
+			if (virtualFile.isDirectory()) {
+				String releasePath = virtualFile.getPath();
+				File file_release7_1 = new File(releasePath + "/bin/conf/application-dev.yml");
+				File file_release7_2 = new File(releasePath + "/bin/conf/bootstrap.yml");
+				if (file_release7_1.exists() && file_release7_2.exists()) {//AWS7版本
+					return true;
 				}
 			}
-		});
+		}
+		return false;
 	}
 
 	public static boolean isReleaseDir(VirtualFile file) {

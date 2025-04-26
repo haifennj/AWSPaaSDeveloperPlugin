@@ -1,8 +1,11 @@
 package com.github.haifennj.ideaplugin.dependencies;
 
+import org.jetbrains.annotations.NotNull;
+
 import com.github.haifennj.ideaplugin.config.ConfigSettingKeys;
 import com.github.haifennj.ideaplugin.config.ConfigSettingUtil;
 import com.github.haifennj.ideaplugin.helper.NotificationUtil;
+import com.github.haifennj.ideaplugin.helper.PluginUtil;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 
@@ -24,6 +27,11 @@ public class AWSModuleDependenciesAction extends AnAction {
 			message = awsModuleDependencies.updateDependencies();
 		}
 		NotificationUtil.showInfoNotification(anActionEvent, message);
+	}
+
+	@Override
+	public void update(@NotNull AnActionEvent e) {
+		e.getPresentation().setVisible(!PluginUtil.isAWS7());
 	}
 
 }
