@@ -207,16 +207,6 @@ public class PluginUtil {
 		if (PluginUtil.isExcludeModule(module)) {
 			return false;
 		}
-//		if (name.startsWith("aws-")) {
-//			return true;
-//		} else {
-//			String moduleFilePath = module.getModuleFilePath();
-//			if (moduleFilePath.contains("apps/install") || moduleFilePath.contains("apps/")) {
-//				return true;
-//			} else {
-//				return false;
-//			}
-//		}
 		if (isAvailableAppModule(module)) {
 			return false;
 		} else {

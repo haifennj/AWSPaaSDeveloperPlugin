@@ -10,7 +10,6 @@ import com.github.haifennj.ideaplugin.helper.PluginUtil;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
@@ -101,17 +100,19 @@ public class GenerateGradle extends AnAction {
     public void update(AnActionEvent e) {
         VirtualFile[] data = CommonDataKeys.VIRTUAL_FILE_ARRAY.getData(e.getDataContext());
         VirtualFile file = CommonDataKeys.VIRTUAL_FILE.getData(e.getDataContext());
-		ApplicationManager.getApplication().invokeLater(() -> {
-			if (file == null) {
+		if (!PluginUtil.isAWS7()) {
+			e.getPresentation().setVisible(false);
+			return;
+		}
+		if (file == null) {
+			e.getPresentation().setVisible(false);
+		} else {
+			if ((data != null ? data.length : 0) > 1) {
 				e.getPresentation().setVisible(false);
 			} else {
-				if ((data != null ? data.length : 0) > 1) {
-					e.getPresentation().setVisible(false);
-				} else {
-					checkFile(e, file, false);
-				}
+				checkFile(e, file, false);
 			}
-		});
+		}
     }
 
     private void checkFile(AnActionEvent e, VirtualFile file, boolean isMulti) {

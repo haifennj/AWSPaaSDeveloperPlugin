@@ -121,11 +121,8 @@ public class LinkAppAction extends AnAction {
 
 	private void checkFile(AnActionEvent e, VirtualFile file, boolean isMulti) {
 		String flag = "/apps/";
-		// if (PluginUtil.isAWS7()) {
-		// 	e.getPresentation().setVisible(false);
-		// 	return;
-		// }
-		if (PluginUtil.getReleaseModule(e.getProject()) == null) {
+		Module releaseModule = PluginUtil.getReleaseModule(e.getProject());
+		if (releaseModule == null) {
 			e.getPresentation().setVisible(false);
 			return;
 		}
@@ -169,9 +166,9 @@ public class LinkAppAction extends AnAction {
 	}
 
 	protected boolean checkFileExist(AnActionEvent e, VirtualFile file) {
-		Module releaseModule = PluginUtil.getReleaseModule(e.getProject());
-		if (releaseModule != null) {
-			String targetFilePath = releaseModule.getModuleFile().getParent().getPath() + "/apps/install/" + file.getName();
+		VirtualFile releaseModuleFile = PluginUtil.findReleaseModuleFile(e.getProject());
+		if (releaseModuleFile != null) {
+			String targetFilePath = releaseModuleFile.getPath() + "/apps/install/" + file.getName();
 			return new File(targetFilePath).exists();
 		}
 		return false;

@@ -63,7 +63,7 @@ public class CreateModulesAction extends AnAction {
 	}
 
 	private void checkFile(AnActionEvent e, VirtualFile file, boolean isMulti) {
-		if (file.getName().startsWith("_bpm")) {
+		if (file.getName().startsWith("_bpm") || file.getName().startsWith("_platform")) {
 			e.getPresentation().setVisible(false);
 			return;
 		}

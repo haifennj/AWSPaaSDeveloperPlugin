@@ -101,7 +101,7 @@ public class FileExportAction extends AnAction {
 						"apps/install/_platform.runtime/template/page/client.dashboard.portal.70.htm",
 						"webserver/webapps/portal/apps/_platform.runtime/dashboard/exec/main-70"
 				)),
-				Map.of("id", "AWSFileExport-dashboard-mobile", "level", 1, "ver", 6, "name", "一键导出(图表移动端)", "paths", List.of(
+				Map.of("id", "AWSFileExport-dashboard-mobile", "level", 1, "ver", 6, "name", "一键导出(图表运行Mobile)", "paths", List.of(
 						"apps/install/_bpm.portal/template/page/client.dashboard.mobile.home.htm",
 						"webserver/webapps/portal/apps/_bpm.portal/dashboard/mobile/main",
 						"apps/install/_platform.runtime/template/page/client.dashboard.mobile.home.htm",

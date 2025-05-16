@@ -15,6 +15,7 @@
  */
 package com.github.haifennj.ideaplugin.helper;
 
+import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -40,17 +41,11 @@ import kotlin.coroutines.Continuation;
  * @author zhanghf
  */
 public class MyStartupActivity implements ProjectActivity {
-
 	@Nullable
 	@Override
 	public Object execute(@NotNull Project project, @NotNull Continuation<? super Unit> continuation) {
-		ActionManager actionManager = ActionManager.getInstance();
-		DefaultActionGroup toolsMenu = (DefaultActionGroup) actionManager.getAction("ToolsMenu");
-		// 创建一个新的子菜单
-		DefaultActionGroup mySubMenu = new DefaultActionGroup("一键导出-其他", true);
 
 		Future<Boolean> future = PluginUtil.checkAws7(project);
-
 		// 使用 ApplicationManager 的调度器处理回调
 		ApplicationManager.getApplication().executeOnPooledThread(() -> {
 			try {
@@ -74,6 +69,12 @@ public class MyStartupActivity implements ProjectActivity {
 		ActionManager actionManager = ActionManager.getInstance();
 		DefaultActionGroup toolsMenu = (DefaultActionGroup) actionManager.getAction("ToolsMenu");
 		DefaultActionGroup subMenu = new DefaultActionGroup("一键导出(更多)", true);
+
+		boolean alreadyAdded = Arrays.stream(toolsMenu.getChildren(null))
+				.anyMatch(action -> "AWSFileExport-process-pc".equals(ActionManager.getInstance().getId(action)));
+		if (alreadyAdded) {
+			return;
+		}
 
 		for (Map<String, Object> map : FileExportAction.FILE_PATHS_LIST) {
 			if (map.containsKey("separator")) {
