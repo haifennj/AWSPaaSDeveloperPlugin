@@ -290,7 +290,7 @@ public class PluginUtil {
 		//校验是不是一个有效的release
 		String releasePath = file.getPath();
 		File file_release7_1 = new File(releasePath + "/bin/conf/application-dev.yml");
-		File file_release7_2 = new File(releasePath + "/bin/conf/bootstrap.yml");
+		File file_release7_2 = new File(releasePath + "/bin/conf/application.yml");
 
 		File file_release6_1 = new File(releasePath + "/bin/conf/server.xml");
 		File file_release6_2 = new File(releasePath + "/bin/lib/aws-license.jar");
