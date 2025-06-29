@@ -277,7 +277,7 @@ public class PluginUtil {
 			if (virtualFile.isDirectory()) {
 				String releasePath = virtualFile.getPath();
 				File file_release7_1 = new File(releasePath + "/bin/conf/application-dev.yml");
-				File file_release7_2 = new File(releasePath + "/bin/conf/bootstrap.yml");
+				File file_release7_2 = new File(releasePath + "/bin/conf/application.yml");
 				if (file_release7_1.exists() && file_release7_2.exists()) {//AWS7版本
 					return true;
 				}
