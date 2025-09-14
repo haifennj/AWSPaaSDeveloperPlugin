@@ -1,38 +1,25 @@
 package com.github.haifennj.ideaplugin.helper;
 
+import com.github.haifennj.ideaplugin.file.FileExportAction;
+import com.intellij.openapi.actionSystem.ActionManager;
+import com.intellij.openapi.actionSystem.DefaultActionGroup;
+import com.intellij.openapi.project.Project;
+
+import java.util.Arrays;
+import java.util.Map;
+
 /**
- * Description:
+ * 暂时作废
  * <p>
- * Date: 20250413 00:43
+ * Date: 20250909 22:43
  *
  * @author zhanghf
  */
-public class MyStartupActivity /*implements ProjectActivity*/ {
-	/*@Nullable
-	@Override
-	public Object execute(@NotNull Project project, @NotNull Continuation<? super Unit> continuation) {
-
-		Future<Boolean> future = PluginUtil.checkAws7(project);
-		// 使用 ApplicationManager 的调度器处理回调
-		ApplicationManager.getApplication().executeOnPooledThread(() -> {
-			try {
-				boolean isAWS7 = future.get(); // 在后台线程获取结果
-				// 回到 EDT 更新 UI
-				ApplicationManager.getApplication().invokeLater(() -> {
-					updateUIWithAWS7Status(project, isAWS7);
-				});
-			} catch (InterruptedException | ExecutionException e) {
-				Thread.currentThread().interrupt();
-				// 可选：记录错误或显示通知
-				ApplicationManager.getApplication().invokeLater(() -> {
-					NotificationUtil.showErrorNotification(project, "检查AWS版本失败: " + e.getMessage());
-				});
-			}
-		});
-		return null;
+public class MyInitHelper {
+	public static void init(Project project) {
+		updateUIWithAWS7Status(project, true);
 	}
-
-	private void updateUIWithAWS7Status(Project project, boolean isAWS7) {
+	public static void updateUIWithAWS7Status(Project project, boolean isAWS7) {
 		ActionManager actionManager = ActionManager.getInstance();
 		DefaultActionGroup toolsMenu = (DefaultActionGroup) actionManager.getAction("ToolsMenu");
 		DefaultActionGroup subMenu = new DefaultActionGroup("一键导出(更多)", true);
@@ -53,7 +40,7 @@ public class MyStartupActivity /*implements ProjectActivity*/ {
 			String label = map.get("name").toString();
 			int ver = Integer.parseInt(map.get("ver").toString());
 			int level = Integer.parseInt(map.get("level").toString());
-			boolean isAdd = isAWS7 ? ver >= 6 : ver == 6;
+			boolean isAdd = true;//isAWS7 ? ver >= 6 : ver == 6;
 
 			if (isAdd) {
 				FileExportAction action = new FileExportAction(label, id);
@@ -67,5 +54,5 @@ public class MyStartupActivity /*implements ProjectActivity*/ {
 		}
 		toolsMenu.addSeparator();
 		toolsMenu.add(subMenu);
-	}*/
+	}
 }

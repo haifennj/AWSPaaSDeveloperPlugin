@@ -7,4 +7,6 @@ public interface PluginConst {
 	public static final String PLUGIN_AWS_LIBRARY_NAME = "aws_lib";
 
 	public static final String PLUGIN_ID = "com.github.haifennj.awsdeveloperplugins";
+	public static final String MY_PLUGIN_ACTION_PREFIX = "AWSPlugin.Action";
+	public static final String SEPARATOR = "------------------------------";
 }
