@@ -129,9 +129,9 @@ public class FileExportPathList {
 						"webserver/webapps/portal/apps/_platform.infra/model/automation/designer/main"
 				)),
 				Map.of("actionId", "60", "id", "AWSFileExport-model-repository", "level", 2, "ver", 6, "name", "一键导出(业务建模)", "paths", List.of(
+						"apps/install/_bpm.platform/template/page/console.m.model.repository.htm",
 						"apps/install/_platform.infra/template/page/console.m.model.repository.htm",
-						"apps/install/_platform.infra/template/page/console.m.model.repository.htm",
-						"webserver/webapps/portal/apps/_platform.infra/model/dashboard-plus/main",
+						"webserver/webapps/portal/apps/_bpm.platform/model-repository",
 						"webserver/webapps/portal/apps/_platform.infra/model/model-repository"
 				)),
 				Map.of("actionId", "61", "separator", true, "level", 2),

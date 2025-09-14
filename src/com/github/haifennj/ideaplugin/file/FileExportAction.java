@@ -56,6 +56,8 @@ public class FileExportAction extends AnAction {
 
 		SimpleDateFormat datetimeFormat = new SimpleDateFormat("yyyyMMdd_HH");
 		String time = datetimeFormat.format(System.currentTimeMillis());
+		Presentation p = event.getPresentation();
+		String name = p.getText().replace("一键导出", "");
 
 		String userHome = System.getProperty("user.home");
 		String fileSeparator = System.getProperty("file.separator");
@@ -64,7 +66,7 @@ public class FileExportAction extends AnAction {
 			return;
 		}
 		String baseSourceDir = releaseModuleFile.getPath() + fileSeparator;
-		String defaultOutput = userHome + fileSeparator + "Desktop" + fileSeparator + event.getProject().getName() + fileSeparator + event.getProject().getName()+"@"+time;
+		String defaultOutput = userHome + fileSeparator + "Desktop" + fileSeparator + event.getProject().getName() + fileSeparator + event.getProject().getName()+"@"+time+name;
 
 		for (String path : filePaths) {
 			try {
@@ -110,11 +112,12 @@ public class FileExportAction extends AnAction {
 						return "";
 					}
 				}
-				if (map.containsKey("name")) {
-					return (String) map.get("name");
-				}
 				if (map.containsKey("separator")) {
 					return PluginConst.SEPARATOR;
+				}
+				if (map.containsKey("name")) {
+					int ver = Integer.parseInt(map.get("ver").toString());
+					return map.get("name") + (ver == 7 ? " (AWS" + map.get("ver") + ")" : "");
 				}
 			}
 		}
@@ -127,7 +130,7 @@ public class FileExportAction extends AnAction {
 		}
 		String index = staticActionId.replace(PluginConst.MY_PLUGIN_ACTION_PREFIX, ""); // 提取 1,2,...
 		for (Map<String, Object> map : FILE_PATHS_LIST) {
-			if (index.equals(map.get("id"))) {
+			if (index.equals(map.get("actionId"))) {
 				return (String) map.get("id");
 			}
 		}
@@ -146,6 +149,9 @@ public class FileExportAction extends AnAction {
 	public void exportFiles(String baseSourceDir, String targetDir, String relativeFilePath) throws IOException {
 		Path sourcePath = Paths.get(baseSourceDir, relativeFilePath); // Combine base directory and relative path
 		Path targetPath = Paths.get(targetDir, relativeFilePath); // Same structure as source
+		if (!sourcePath.toFile().exists()) {
+			return;
+		}
 		FileUtil.copyFileOrDir(sourcePath.toFile(), targetPath.toFile());
 		System.out.println("File copied: " + sourcePath + " -> " + targetPath);
 	}

@@ -33,6 +33,8 @@ public class FileExportActionGroup extends ActionGroup {
 			String label = map.get("name").toString();
 			int ver = Integer.parseInt(map.get("ver").toString());
 			int level = Integer.parseInt(map.get("level").toString());
+			label =  label + (ver == 7 ? " (AWS" + ver + ")" : "");
+
 			String actionId = PluginConst.MY_PLUGIN_ACTION_PREFIX + map.get("actionId");
 			if (level > 1) {
 				// 用已有的 FileExportAction
